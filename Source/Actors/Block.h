@@ -10,10 +10,4 @@ class Block : public Actor
 {
 public:
     explicit Block(Game* game, const std::string &texturePath);
-
-private:
-    float mForwardForce{};
-    float mFrictionCoefficient{};
-
-    class DrawSpriteComponent* mSpriteComponent;
 };

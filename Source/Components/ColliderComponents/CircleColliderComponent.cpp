@@ -23,7 +23,7 @@ float CircleColliderComponent::GetRadius() const
 
 bool CircleColliderComponent::Intersect(const CircleColliderComponent& c) const
 {
-    // Calculate distance squared
+    // Calculate amount squared
     Vector2 diff = GetCenter() - c.GetCenter();
     float distSq = diff.LengthSq();
 

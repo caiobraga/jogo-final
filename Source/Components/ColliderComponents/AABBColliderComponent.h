@@ -5,7 +5,9 @@
 #pragma once
 #include "../Component.h"
 #include "../../Math.h"
+#include "../RigidBodyComponent.h"
 #include <vector>
+#include <set>
 
 enum class ColliderLayer
 {
@@ -25,23 +27,29 @@ enum class CollisionSide
 class AABBColliderComponent : public Component
 {
 public:
-    AABBColliderComponent(class Actor* owner, int dx, int dy, int w, int h, ColliderLayer layer, int updateOrder = 10);
+    struct Overlap
+    {
+        float amount;
+        CollisionSide side;
+        AABBColliderComponent *target;
+    };
+
+    AABBColliderComponent(class Actor* owner, int dx, int dy, int w, int h,
+                                ColliderLayer layer, int updateOrder = 10);
     ~AABBColliderComponent() override;
 
     bool Intersect(const AABBColliderComponent& b) const;
-    float ResolveVertical(const AABBColliderComponent& b) const;
-    float ResolveHorizontal(const AABBColliderComponent& b) const;
-
-    // State getter/setter
-    ColliderLayer GetLayer() const { return mLayer; }
-    void SetLayer(ColliderLayer layer) { mLayer = layer; }
-
-    CollisionSide GetDirection(const AABBColliderComponent& b) const;
+    void DetectCollision(RigidBodyComponent *rigidBody);
 
     Vector2 GetMin() const;
     Vector2 GetMax() const;
+    Vector2 GetCenter() const;
+    ColliderLayer GetLayer() const { return mLayer; }
 
 private:
+    Overlap GetMinOverlap(AABBColliderComponent* b) const;
+    void ResolveCollisions(RigidBodyComponent *rigidBody, const Overlap& minOverlap);
+
     Vector2 mOffset;
     int mWidth;
     int mHeight;

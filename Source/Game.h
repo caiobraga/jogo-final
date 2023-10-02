@@ -9,6 +9,7 @@
 #pragma once
 #include <SDL2/SDL.h>
 #include <vector>
+#include "Math.h"
 
 class Game
 {
@@ -35,17 +36,25 @@ public:
     void RemoveCollider(class AABBColliderComponent* collider);
     std::vector<class AABBColliderComponent*>& GetColliders() { return mColliders; }
 
+    Vector2& GetCameraPos() { return mCameraPos; };
+    void SetCameraPos(const Vector2& position) { mCameraPos = position; };
+
     // Window functions
     int GetWindowWidth() const { return mWindowWidth; }
     int GetWindowHeight() const { return mWindowHeight; }
 
     SDL_Texture* LoadTexture(const std::string& texturePath);
 
+    // Game-specific
+    const class Mario* GetMario() { return mMario; }
+
 private:
     void ProcessInput();
     void UpdateGame();
+    void UpdateCamera();
     void GenerateOutput();
 
+    // Game-specific
     void LoadLevel(const std::string& texturePath, int width, int height);
 
     // All the actors in the game
@@ -72,6 +81,8 @@ private:
     // Track if we're updating actors right now
     bool mIsRunning;
     bool mUpdatingActors;
+
+    Vector2 mCameraPos;
 
     // Game-specific
     class Mario *mMario;

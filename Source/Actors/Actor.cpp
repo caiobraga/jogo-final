@@ -17,6 +17,7 @@ Actor::Actor(Game* game)
         , mScale(1.0f)
         , mRotation(0.0f)
         , mGame(game)
+        , mIsOnGround(false)
 {
     mGame->AddActor(this);
 }
@@ -38,7 +39,10 @@ void Actor::Update(float deltaTime)
     {
         for (auto comp : mComponents)
         {
-            comp->Update(deltaTime);
+            if(comp->IsEnabled())
+            {
+                comp->Update(deltaTime);
+            }
         }
 
         OnUpdate(deltaTime);
@@ -46,6 +50,16 @@ void Actor::Update(float deltaTime)
 }
 
 void Actor::OnUpdate(float deltaTime)
+{
+
+}
+
+void Actor::OnCollision(std::unordered_map<CollisionSide, AABBColliderComponent::Overlap>& responses)
+{
+
+}
+
+void Actor::Kill()
 {
 
 }

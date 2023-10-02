@@ -12,6 +12,7 @@
 Component::Component(Actor* owner, int updateOrder)
           :mOwner(owner)
           ,mUpdateOrder(updateOrder)
+          ,mIsEnabled(true)
 {
     // Add to actor's vector of components
     mOwner->AddComponent(this);

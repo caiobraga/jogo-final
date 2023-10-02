@@ -3,16 +3,19 @@
 //
 
 #include <SDL.h>
-#include "RigidBodyComponent.h"
 #include "../Actors/Actor.h"
 #include "../Game.h"
+#include "RigidBodyComponent.h"
+#include "ColliderComponents/AABBColliderComponent.h"
 
-const int MAX_SPEED = 250.0f;
+const float MAX_SPEED_X = 300.0f;
+const float MAX_SPEED_Y = 700.0f;
+const float GRAVITY = 2000.0f;
 
-RigidBodyComponent::RigidBodyComponent(class Actor* owner, float mass, int updateOrder)
+RigidBodyComponent::RigidBodyComponent(class Actor* owner, float mass, float friction, int updateOrder)
         :Component(owner, updateOrder)
         ,mMass(mass)
-        ,mAngularSpeed(0.0f)
+        ,mFrictionCoefficient(friction)
         ,mVelocity(Vector2::Zero)
         ,mAcceleration(Vector2::Zero)
 {
@@ -25,34 +28,31 @@ void RigidBodyComponent::ApplyForce(const Vector2 &force) {
 
 void RigidBodyComponent::Update(float deltaTime)
 {
-    Vector2 position = mOwner->GetPosition();
+    // Apply gravity acceleration
+    ApplyForce(Vector2::UnitY * GRAVITY);
 
+    // Apply friction
+    if(mVelocity.x != 0.0f) {
+        ApplyForce(Vector2::UnitX * -mFrictionCoefficient * mVelocity.x);
+    }
+
+    // Euler Integration
     mVelocity += mAcceleration * deltaTime;
 
+    mVelocity.x = Math::Clamp<float>(mVelocity.x, -MAX_SPEED_X, MAX_SPEED_X);
+    mVelocity.y = Math::Clamp<float>(mVelocity.y, -MAX_SPEED_Y, MAX_SPEED_Y);
+
     if(Math::NearZero(mVelocity.x, 1.0f)) {
-        mVelocity.Set(0.f, mVelocity.y);
+        mVelocity.x = 0.f;
     }
 
-    if(mVelocity.x > MAX_SPEED)
-    {
-        mVelocity.x = MAX_SPEED;
-    }
-    else if(mVelocity.x < -MAX_SPEED)
-    {
-        mVelocity.x = -MAX_SPEED;
-    }
+    Vector2 position = mOwner->GetPosition();
+    mOwner->SetPosition(position + mVelocity * deltaTime);
 
-//    if(mVelocity.y > MAX_SPEED)
-//    {
-//        mVelocity.y = MAX_SPEED;
-//    }
-//    else if(mVelocity.y < -MAX_SPEED)
-//    {
-//        mVelocity.y = -MAX_SPEED;
-//    }
-
-    position += mVelocity * deltaTime;
-    mOwner->SetPosition(position);
+    auto collider = mOwner->GetComponent<AABBColliderComponent>();
+    if (collider) {
+        collider->DetectCollision(this);
+    }
 
     mAcceleration.Set(0.f, 0.f);
 }

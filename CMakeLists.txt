@@ -35,10 +35,14 @@ add_executable(${PROJECT_NAME}
         Source/Actors/Mario.h
         Source/Components/ColliderComponents/AABBColliderComponent.cpp
         Source/Components/ColliderComponents/AABBColliderComponent.h
-        Source/Components/DrawComponents/DrawSpriteSheetComponent.cpp
-        Source/Components/DrawComponents/DrawSpriteSheetComponent.h
+        Source/Components/DrawComponents/DrawAnimatedComponent.cpp
+        Source/Components/DrawComponents/DrawAnimatedComponent.h
         Source/Actors/Block.cpp
         Source/Actors/Block.h
+        Source/Actors/Goomba.cpp
+        Source/Actors/Goomba.h
+        Source/Actors/Spawner.cpp
+        Source/Actors/Spawner.h
 )
 
 ####### DO NOT EDIT BELLOW

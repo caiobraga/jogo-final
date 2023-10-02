@@ -1,2 +1,2 @@
-# p4-super-mario-bros-template
-Código base para o projeto P4: Super Mario Bros
+# p2-pong-template
+Código base para o projeto P2: Pong

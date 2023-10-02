@@ -16,7 +16,15 @@
 #include "Actors/Actor.h"
 #include "Actors/Mario.h"
 #include "Actors/Block.h"
+#include "Actors/Goomba.h"
+#include "Actors/Spawner.h"
 #include "Components/DrawComponents/DrawComponent.h"
+#include "Components/ColliderComponents/AABBColliderComponent.h"
+
+const int LEVEL_WIDTH = 213;
+const int LEVEL_HEIGHT = 14;
+const int TILE_SIZE = 32;
+const float SPAWN_DISTANCE = 600.0f;
 
 Game::Game(int windowWidth, int windowHeight)
         :mWindow(nullptr)
@@ -68,10 +76,10 @@ void Game::InitializeActors()
     // TODO - PARTE 1
     // --------------
 
-    // TODO 12.1 (~1 linha): Crie um objeto do tipo Mario e armazene na variável membro mMario.
+    // TODO 2.1 (~1 linha): Crie um objeto do tipo Mario e armazene-o na variável membro mMario.
 
-    // TODO 12.2 (~1 linha): Utilize a função LoadLevel para carregar a primeira fase (Level1.txt) do jogo.
-    //  Esse arquivo tem 213 colunas de largura e 14 linhas de altura.
+    // TODO 2.2 (~1 linha): Utilize a função LoadLevel para carregar o primeiro nível (Level1.txt) do jogo.
+    //  Esse arquivo tem 14 linhas e 213 colunas.
 }
 
 void Game::LoadLevel(const std::string& levelPath, const int width, const int height)
@@ -80,10 +88,11 @@ void Game::LoadLevel(const std::string& levelPath, const int width, const int he
     // TODO - PARTE 1
     // --------------
 
-    // TODO 13 (~12 linhas): Leia o arquivo texto `levelPath` com `height` linhas e `width` colunas
+    // TODO 3.1 (~12 linhas): Leia o arquivo texto `levelPath` com `height` linhas e `width` colunas
     //  para carregar uma fase do jogo. Uma fase é representada por um grid com largura `width`
-    //  e altura  height`, onde cada célula tem tamanho 32x32. Para todo caractere entre A e I, crie um
-    //   bloco estático utilizando a textura correspondente.
+    //  e altura `height`, onde cada célula tem tamanho 32x32. Para cara caractere entre `A` e `I`, crie um
+    //  objeto do tipo `Block` utilizando a textura correspondente. Para cara caractere `Y`, crie um
+    //  um objeto do tipo `Spawner` utilizando a distância SPAWN_DISTANCE como parâmetro de criação.
 }
 
 void Game::RunLoop()
@@ -131,6 +140,23 @@ void Game::UpdateGame()
 
     // Update all actors and pending actors
     UpdateActors(deltaTime);
+
+    // Update camera position
+    UpdateCamera();
+}
+
+void Game::UpdateCamera()
+{
+    // --------------
+    // TODO - PARTE 3
+    // --------------
+
+    // TODO 1.1 (~4 linhas): Calcule a posição horizontal da câmera subtraindo a posição horizontal do
+    //  jogador (i.e., do Mário) da metade da largura da janela. Isso fará com que a câmera fique sempre
+    //  centralizada no jogador. No SMB, o jogador não pode voltar no nível, portanto, antes de atualizar
+    //  a posição da câmera, verifique se a posição calculada é maior do que a posição anterior. Além disso,
+    //  limite a posição para que a câmera fique entre 0 e o limite superior do nível. Para calcular o
+    //  limite superior do nível, utilize as constantes `LEVEL_WIDTH` e `TILE_SIZE`.
 }
 
 void Game::UpdateActors(float deltaTime)
@@ -214,7 +240,7 @@ void Game::AddCollider(class AABBColliderComponent* collider)
     mColliders.emplace_back(collider);
 }
 
-void Game::RemoveCollider(class AABBColliderComponent* collider)
+void Game::RemoveCollider(AABBColliderComponent* collider)
 {
     auto iter = std::find(mColliders.begin(), mColliders.end(), collider);
     mColliders.erase(iter);
@@ -223,7 +249,7 @@ void Game::RemoveCollider(class AABBColliderComponent* collider)
 void Game::GenerateOutput()
 {
     // Set draw color to black
-    SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, 255);
+    SDL_SetRenderDrawColor(mRenderer, 107, 140, 255, 255);
 
     // Clear back buffer
     SDL_RenderClear(mRenderer);
@@ -240,24 +266,20 @@ void Game::GenerateOutput()
     SDL_RenderPresent(mRenderer);
 }
 
-SDL_Texture* Game::LoadTexture(const std::string& texturePath)
-{
+SDL_Texture* Game::LoadTexture(const std::string& texturePath) {
     // --------------
     // TODO - PARTE 1
     // --------------
 
-    // TODO 1.1 (~4 linhas): Utilize a função IMG_Load para carregar a imagem passada como
-    //  parâmetro `texturePath`. Esse função retorna um ponteiro para SDL_Surface* .
-    //  Retorne nullptr se ela não carregada com sucesso.
+    // TODO 1.1 (~4 linhas): Utilize a função `IMG_Load` para carregar a imagem passada como parâmetro
+    //  `texturePath`. Esse função retorna um ponteiro para `SDL_Surface*`. Retorne `nullptr` se a
+    //  imagem não foi carregada com sucesso.
 
 
-    // TODO 1.2 (~4 linhas): Utilize a função SDL_CreateTextureFromSurface para criar uma textura
-    //  a partir da imagem carregada anteriormente. Esse função retorna um ponteiro para SDL_Texture*.
-    //  Logo apos criar a texture, utilize a função SDL_FreeSurface para liberar a imagem carregada.
-    //  Retorne nullptr se a textura não for carregada com sucesso.
-
-
-    // TODO 1.3 (~4 linhas): Retorne o ponteiro para a textura criada.
+    // TODO 1.2 (~4 linhas): Utilize a função `SDL_CreateTextureFromSurface` para criar uma textura a partir
+    //  da imagem carregada anteriormente. Essa função retorna um ponteiro para `SDL_Texture*`. Logo após criar
+    //  a textura, utilize a função `SDL_FreeSurface` para liberar a imagem carregada. Se a textura foi carregada
+    //  com sucesso, retorne o ponteiro para a textura. Caso contrário, retorne `nullptr`.
 }
 
 void Game::Shutdown()

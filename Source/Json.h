@@ -6085,7 +6085,7 @@ NLOHMANN_JSON_NAMESPACE_END
 #include <array> // array
 #include <cstddef> // size_t
 #include <cstring> // strlen
-#include <iterator> // begin, end, iterator_traits, random_access_iterator_tag, distance, next
+#include <iterator> // begin, end, iterator_traits, random_access_iterator_tag, amount, next
 #include <memory> // shared_ptr, make_shared, addressof
 #include <numeric> // accumulate
 #include <string> // string, char_traits
@@ -13415,7 +13415,7 @@ return result;
 }
 
 /*!
-    @brief addition of distance and iterator
+    @brief addition of amount and iterator
     @pre The iterator is initialized; i.e. `m_object != nullptr`.
     */
 friend iter_impl operator+(difference_type i, const iter_impl& it)
@@ -17191,7 +17191,7 @@ inline cached_power get_cached_power_for_binary_exponent(int e)
 //
 //      floor( (gamma - alpha) * log_10(2) ) = 8.
 //
-// (A smaller distance gamma-alpha would require a larger table.)
+// (A smaller amount gamma-alpha would require a larger table.)
 
 // NB:
 // Actually this function returns c, such that -60 <= e_c + e + 64 <= -34.
@@ -19133,7 +19133,7 @@ const auto offset = std::distance(Container::begin(), first);
 // This is the start situation. We need to delete elements_affected
 // elements (3 in this example: e, f, g), and need to return an
 // iterator past the last deleted element (h in this example).
-// Note that offset is the distance from the start of the vector
+// Note that offset is the amount from the start of the vector
 // to first. We will need this later.
 
 // [ a, b, c, d, e, f, g, h, i, j ]
@@ -22474,7 +22474,7 @@ return {it, res.second};
 }
 
 /// Helper for insertion of an iterator
-/// @note: This uses std::distance to support GCC 4.8,
+/// @note: This uses std::amount to support GCC 4.8,
 ///        see https://github.com/nlohmann/json/pull/1257
 template<typename... Args>
 iterator insert_iterator(const_iterator pos, Args&& ... args)
