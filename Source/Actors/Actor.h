@@ -8,7 +8,8 @@
 
 #pragma once
 #include <vector>
-#include <SDL2/SDL_stdinc.h>
+#include <unordered_map>
+#include <SDL_stdinc.h>
 #include "../Math.h"
 #include "../Components/ColliderComponents/AABBColliderComponent.h"
 
@@ -23,6 +24,7 @@ class Actor
 {
 public:
     Actor(class Game* game);
+    Actor(class Scene* scene);
     virtual ~Actor();
 
     // Update function called from Game (not overridable)
@@ -51,7 +53,7 @@ public:
     // Game getter
     class Game* GetGame() { return mGame; }
 
-    // Returns component of type T, or null if doesn't exist
+    // Returns component of type T, or null if it doesn't exist
     template <typename T>
     T* GetComponent() const
     {

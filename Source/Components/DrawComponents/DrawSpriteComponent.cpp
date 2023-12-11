@@ -18,6 +18,7 @@ DrawSpriteComponent::DrawSpriteComponent(class Actor* owner, const std::string &
     // TODO 1.1 (1 linhas): Utilize a função LoadTexture da classe Game para criar uma textura a partir da
     //  imagem `texturePath` passada como parâmetro no construtor. Armazene o ponteiro retornada (SDLTexture*)
     //  na variável membro 'mSpriteSheetSurface'.
+    mSpriteSheetSurface = GetGame()->LoadTexture(texturePath);
 }
 
 void DrawSpriteComponent::Draw(SDL_Renderer *renderer)
@@ -34,9 +35,24 @@ void DrawSpriteComponent::Draw(SDL_Renderer *renderer)
     //  Se a rotação for zero, o sprite deve ser desenhado virado à direita. Se for igual a Pi, deve
     //  ser desenhado à esquerda.
 
+    Vector2 objpos = GetOwner()->GetPosition();
+    int x = GetOwner()->GetPosition().x;
+    int y = GetOwner()->GetPosition().y;
+    int x2 = x - GetGame()->GetCameraPos().x;
+    int y2 = y - GetGame()->GetCameraPos().y;
+    SDL_Rect dstrect{ x2,y2,  mWidth, mHeight};
+    SDL_Point point = { x,y };
+    SDL_RendererFlip flip = SDL_FLIP_NONE;
+    if (GetOwner()->GetRotation() == Math::Pi) {
+        flip = SDL_FLIP_HORIZONTAL;
+    }
+    SDL_RenderCopyEx(renderer, mSpriteSheetSurface, nullptr,&dstrect,0.0 ,&point ,flip);
+
     // --------------
     // TODO - PARTE 3
     // --------------
     // TODO 1.1: Para que o objeto seja desenhado em relação a posição da câmera, subtraia a posição da
     //  câmera da posição do objeto quando for desenhá-lo com a função `SDL_RenderCopyEx`.
+
+
 }

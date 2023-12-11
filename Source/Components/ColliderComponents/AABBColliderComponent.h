@@ -13,7 +13,10 @@ enum class ColliderLayer
 {
     Player,
     Enemy,
-    Blocks
+    Blocks,
+    Ball,
+    Rede,
+    Point
 };
 
 enum class CollisionSide
